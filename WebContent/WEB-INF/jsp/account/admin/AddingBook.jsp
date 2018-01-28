@@ -21,48 +21,13 @@
 <fmt:message bundle="${loc}" key="local.addBookPage.select.option.name.fiction" var="fiction" />
 <fmt:message bundle="${loc}" key="local.addBookPage.select.option.name.technical" var="technical" />
 <fmt:message bundle="${loc}" key="local.button.name.addBook" var="addBookButton" />
+<fmt:message bundle="${loc}" key="local.button.name.addMoreAuthor" var="addMoreAuthorButton" />
+<fmt:message bundle="${loc}" key="local.button.name.remove" var="removeButton" />
 <fmt:message bundle="${loc}" key="local.button.name.goToAccount" var="goToAccount_button" />
 <fmt:message bundle="${loc}" key="local.button.name.logOut" var="logOutButton" />
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script>
-        $(function()
-        {
-            alert('Подключена последняя версия jQuery через Google хостинг');
-        });
-</script>
-<script>
-$('#addDynamicExtraFieldButton').click(function(event) {
-    addDynamicExtraField();
-    return false;
- });
-function addDynamicExtraField() {
-    var div = $('<div/>', {
-        'class' : 'DynamicExtraField'
-    }).appendTo($('#DynamicExtraFieldsContainer'));
-    var br = $('<br/>').appendTo(div);
-    var label = $('<label/>').html("Доп. поле ").appendTo(div);
-    var input = $('<input/>', {
-        value : 'Удаление',
-        type : 'button',
-        'class' : 'DeleteDynamicExtraField'
-    }).appendTo(div);
-    input.click(function() {
-        $(this).parent().remove();
-    });
-    var br = $('<br/>').appendTo(div);
-    var textarea = $('<textarea/>', {
-        name : 'DynamicExtraField[]',
-        cols : '50',
-        rows : '3'
-    }).appendTo(div);
-}
-//Для удаления первого поля
-$('.DeleteDynamicExtraField').click(function(event) {
-                $(this).parent().remove();
-                return false;
-            });
-</script>
+
 
 </head>
 <body>
@@ -87,38 +52,42 @@ $('.DeleteDynamicExtraField').click(function(event) {
 	
 	<form action="FrontController" method="post">
 		<input type="hidden" name="command" value="addBook"/>
-	
+		
 		<b><c:out value="${author}" /></b>:<br/>
-		<c:out value="${authorSurname}" />:<input type="text" name="surname" value=""/>
-		<c:out value="${authorName}" />:<input type="text" name="name" value=""/>
-		<br/>
+    	<div id="DynamicFieldsContainer">
+      		<div class="DynamicField">
+          		<label>
+            		<c:out value="${authorSurname}" />:<input type="text" name="surnames[]" value="" required/>
+          		</label>
+          		<label>
+            		<c:out value="${authorName}" />:<input type="text" name="names[]" value="" required/>
+          		</label>
+      		</div>
+    	</div>
+    	<div id="addDynamicField">
+        	<input type="button" id="addDynamicFieldButton" value="${addMoreAuthorButton}">
+   		 </div>
+	
+		<br>
 	
 		<b><c:out value="${title}" /></b>:<br/>
-		<input type="text" name="title" value=""/><br/>
+		<input type="text" name="title" value="" required/><br/>
+		
+		<br>
 	
 		<b><c:out value="${genre}" /></b>:<br/>
 		<select name="genre" required>
-			<option disabled><c:out value="${genreSelection}" /></option>
+			<option selected disabled><c:out value="${genreSelection}" /></option>
 			<option value="fiction"><c:out value="${fiction}" /></option>
 			<option value="technical"><c:out value="${technical}" /></option>
 		</select><br/>
+		
+		<br>
 	
 		<input type="submit" value="${addBookButton}">
 	</form>
 	
-	<form action="" method="post" name="Form">
-    	<div id="DynamicExtraFieldsContainer">
-      		<div id="addDynamicField">
-        		<input type="button" id="addDynamicExtraFieldButton" value="Добавить динамическое поле">
-      		</div>
-       		<div class="DynamicExtraField">
-           		<br>
-            	<label for="DynamicExtraField">Доп. поле </label> <input value="Удаление" type="button" class="DeleteDynamicExtraField">
-            	<br>
-            	<textarea name="DynamicExtraField[]" cols="50">test</textarea>
-        	</div>
-       	</div>
-	</form>
+	<br>
 	
 	<form action="FrontController" method="post">
 		<input type="hidden" name="command" value="goToAccount"/>
@@ -130,6 +99,44 @@ $('.DeleteDynamicExtraField').click(function(event) {
 		<input type="submit" value="${logOutButton}">
 	</form>
 
+	<script>   
+		$('#addDynamicFieldButton').click(function(event) {
+	    	addDynamicField();
+	    	return false;
+		 });
+		function addDynamicField() {
+	    	var div = $('<div/>', {
+	        	'class' : 'DynamicField'
+	    	}).appendTo($('#DynamicFieldsContainer'));
+	    	var label = $('<label/>').html('<c:out value="${authorSurname}" />' + ":").appendTo(div);
+	    	var input = $('<input/>', {
+	        	name : 'surnames[]',
+	        	type : 'text',
+	        	required : 'required'
+	    	}).appendTo(label);
+	    	var label = $('<label/>').html(" " + '<c:out value="${authorName}" />' + ":").appendTo(div);
+	    	var input = $('<input/>', {
+	        	name : 'names[]',
+	        	type : 'text',
+	        	required : 'required'
+	    	}).appendTo(label);
+	    	var input = $('<input/>', {
+	        	value : '${removeButton}',
+	        	type : 'button',
+	        	'class' : 'DeleteDynamicField'
+	    	}).appendTo(div);
+	    	input.click(function() {
+	        	$(this).parent().remove();
+	    	});
+	    	var br = $('<br/>').appendTo(div);
+		}
+		//Удаление поля поля
+		$('.DeleteDynamicField').click(function(event) {
+	                $(this).parent().remove();
+	                return false;
+	            });
+        
+	</script>
 
 </body>
 </html>

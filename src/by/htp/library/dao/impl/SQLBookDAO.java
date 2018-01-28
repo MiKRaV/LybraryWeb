@@ -17,10 +17,17 @@ public class SQLBookDAO implements BookDAO {
 
 	private ConnectionPool conPool = ConnectionPool.getConnectionPool();
 
-	//ƒŒ¡¿¬À≈Õ»≈  Õ»√»
+	//–î–û–ë–ê–í–õ–ï–ù–ò–ï –ö–ù–ò–ì–ò
 	@Override
 	public void addBook(Book book) throws DAOException {
 		Connection con = null;
+		
+		String title = book.getTitle();
+		ArrayList<Author> authors = book.getAuthors(); 
+		
+		if(isBookExist(title, authors)) {
+			throw new DAOException("This book already exist");
+		}
 		
 		PreparedStatement pstmt;
 		ResultSet rs;
@@ -76,7 +83,7 @@ public class SQLBookDAO implements BookDAO {
 		return null;
 	}
 
-	//œŒÀ”◊≈Õ»≈ —œ»— ¿ ¬—≈’  Õ»√
+	//–ü–û–õ–£–ß–ï–ù–ò–ï –°–ü–ò–°–ö–ê –í–°–ï–• –ö–ù–ò–ì
 	@Override
 	public List<Book> getAllBooks() throws DAOException {
 		Connection con = null;
@@ -121,7 +128,7 @@ public class SQLBookDAO implements BookDAO {
 		return bookList;
 	}
 
-	//œ–Œ¬≈– ¿, —”Ÿ≈—“¬”≈“ À» ¿¬“Œ–
+	//–ü–†–û–í–ï–†–ö–ê, –°–£–©–ï–°–¢–í–£–ï–¢ –õ–ò –ê–í–¢–û–†
 	@Override
 	public boolean isAuthorExist(String name, String surname) throws DAOException {
 		Connection con = null;
@@ -147,7 +154,7 @@ public class SQLBookDAO implements BookDAO {
 		return false;
 	}
 
-	//”ƒ¿À≈Õ»≈  Õ»√»
+	//–£–î–ê–õ–ï–ù–ò–ï –ö–ù–ò–ì–ò
 	@Override
 	public void removeBook(String title, List<Author> authors) throws DAOException {
 		if(!isBookExist(title, authors)) {
@@ -157,7 +164,7 @@ public class SQLBookDAO implements BookDAO {
 		
 	}
 
-	//œ–Œ¬≈– ¿, —”Ÿ≈—“¬”≈“ À»  Õ»√¿
+	//–ü–†–û–í–ï–†–ö–ê, –°–£–©–ï–°–¢–í–£–ï–¢ –õ–ò –ö–ù–ò–ì–ê
 	@Override
 	public boolean isBookExist(String title, List<Author> authors) throws DAOException {
 		Connection con = null;

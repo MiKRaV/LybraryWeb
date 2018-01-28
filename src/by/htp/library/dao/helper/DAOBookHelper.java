@@ -26,4 +26,6 @@ public class DAOBookHelper {
 			" (SELECT * FROM books_authors WHERE id_book=?) ba" + 
 			" JOIN authors USING(id_author)";
 	
+	public static final String INSERT_BOOKS = "INSERT INTO books (status_book, genre, title) VALUES (?,?,?)";
+	
 }
